@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 250 — Vunagi&co Founding Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@300;400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#163053;--navy-dark:#0D1220;--navy-mid:#1C3060;
+  --gold:#C9A84C;--gold-light:#E8D09A;
+  --white:#FFFFFF;--off:#F4F6FA;--text:#0D1220;
+  --muted:#6B7A99;--muted2:#A8B4CC;--black:#07090F;
+  --blue:#3498db;--green:#27ae60;--red:#e74c3c;--purple:#8e44ad;
+}
+html{scroll-behavior:smooth}
+body{background:var(--navy-dark);color:var(--white);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+#cur{position:fixed;width:6px;height:6px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#cur-ring{position:fixed;width:28px;height:28px;border:1px solid rgba(201,168,76,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .2s cubic-bezier(.25,.46,.45,.94)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.2rem 5vw;display:flex;align-items:center;justify-content:space-between;background:rgba(13,18,32,.95);backdrop-filter:blur(18px);border-bottom:1px solid rgba(201,168,76,.08)}
+.nav-left{display:flex;align-items:center;gap:12px}
+.nav-logo{width:28px;height:28px;object-fit:contain;border-radius:50%;mix-blend-mode:screen;opacity:.85}
+.nav-brand{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.28em;color:var(--white)}
+.nav-brand span{color:var(--gold)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);text-decoration:none;transition:color .3s}
+.nav-links a:hover{color:var(--gold-light)}
+.nav-date{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.15em;color:rgba(255,255,255,.25)}
+
+/* HERO */
+.hero{min-height:100vh;background:var(--black);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7rem 5vw 4rem;text-align:center}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.03) 1px,transparent 1px);background-size:80px 80px}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 45%,rgba(22,48,83,.65) 0%,transparent 68%)}
+.hero-content{position:relative;z-index:2;width:100%;max-width:1000px}
+.hero-eyebrow{font-size:.54rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;opacity:0;animation:up .9s ease .2s forwards}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,7rem);font-weight:300;line-height:.95;letter-spacing:.04em;color:var(--white);opacity:0;animation:up 1s ease .4s forwards}
+.hero-h1 em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:3rem;opacity:0;animation:up .8s ease .55s forwards}
+
+/* COUNTDOWN */
+.cd-wrap{display:flex;gap:1.5rem;justify-content:center;margin-bottom:2.5rem;opacity:0;animation:up .8s ease .7s forwards;flex-wrap:wrap}
+.cd-unit{display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.cd-num{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,5.5rem);font-weight:300;color:var(--gold-light);line-height:1;min-width:100px;text-align:center;border-bottom:1px solid rgba(201,168,76,.2);padding-bottom:.3rem}
+.cd-lbl{font-size:.48rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+.cd-sep{font-family:'Cormorant Garamond',serif;font-size:3.5rem;color:rgba(201,168,76,.2);align-self:flex-start;padding-top:.2rem;line-height:1}
+.target-lbl{font-size:.58rem;letter-spacing:.22em;color:rgba(255,255,255,.28);margin-bottom:2.5rem;opacity:0;animation:up .8s ease .85s forwards}
+.target-lbl em{color:var(--gold);font-style:normal}
+
+/* THREE GOALS */
+.goals-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;opacity:0;animation:up .8s ease 1s forwards}
+.goal-card{padding:1.4rem 1.6rem;border:1px solid rgba(201,168,76,.1);background:rgba(22,48,83,.18);text-align:left;position:relative;overflow:hidden}
+.goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.goal-card.audience::before{background:var(--blue)}
+.goal-card.funding::before{background:var(--gold)}
+.goal-card.revenue::before{background:var(--green)}
+.goal-tag{font-size:.48rem;letter-spacing:.32em;text-transform:uppercase;margin-bottom:.5rem;display:block}
+.goal-card.audience .goal-tag{color:var(--blue)}
+.goal-card.funding .goal-tag{color:var(--gold)}
+.goal-card.revenue .goal-tag{color:var(--green)}
+.goal-val{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;line-height:1;margin-bottom:.3rem}
+.goal-card.audience .goal-val{color:var(--blue)}
+.goal-card.funding .goal-val{color:var(--gold-light)}
+.goal-card.revenue .goal-val{color:var(--green)}
+.goal-desc{font-size:.68rem;line-height:1.7;color:rgba(255,255,255,.38);letter-spacing:.03em}
+
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
+
+/* MILESTONES */
+.milestones{background:var(--navy-dark);padding:6rem 5vw;border-top:1px solid rgba(201,168,76,.06)}
+.ms-inner{max-width:1000px;margin:0 auto}
+.sec-tag{font-size:.5rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;letter-spacing:.04em;color:var(--white);margin-bottom:.5rem}
+.sec-title em{font-style:italic;color:var(--gold-light)}
+.sec-sub{font-size:.75rem;line-height:1.9;color:rgba(255,255,255,.35);letter-spacing:.04em;margin-bottom:3rem}
+
+/* TIMELINE */
+.timeline{position:relative;display:flex;flex-direction:column;gap:0}
+.timeline::before{content:'';position:absolute;left:20px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--gold),rgba(201,168,76,.1))}
+.tl-item{display:flex;gap:2rem;align-items:flex-start;padding:1.5rem 0;padding-left:50px;position:relative;border-bottom:1px solid rgba(255,255,255,.04)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{position:absolute;left:12px;top:1.8rem;width:16px;height:16px;border-radius:50%;border:2px solid;flex-shrink:0}
+.tl-dot.now{background:var(--gold);border-color:var(--gold);box-shadow:0 0 10px rgba(201,168,76,.5)}
+.tl-dot.investor{background:transparent;border-color:var(--blue)}
+.tl-dot.thesis{background:transparent;border-color:var(--purple)}
+.tl-dot.jlpt{background:transparent;border-color:var(--green)}
+.tl-dot.launch{background:transparent;border-color:var(--gold)}
+.tl-date{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.18em;color:rgba(255,255,255,.3);flex-shrink:0;width:100px;padding-top:3px}
+.tl-content{}
+.tl-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.25rem}
+.tl-desc{font-size:.72rem;line-height:1.7;color:rgba(255,255,255,.35);letter-spacing:.03em}
+.tl-tag{font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;padding:.2rem .6rem;border:1px solid;display:inline-block;margin-bottom:.4rem}
+.tl-tag.urgent{border-color:rgba(231,76,60,.4);color:var(--red)}
+.tl-tag.key{border-color:rgba(201,168,76,.3);color:var(--gold)}
+.tl-tag.language{border-color:rgba(52,152,219,.3);color:var(--blue)}
+.tl-tag.life{border-color:rgba(39,174,96,.3);color:var(--green)}
+.tl-days{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:rgba(255,255,255,.15);position:absolute;right:0;top:1.2rem}
+
+/* PHASE CARDS */
+.phases{background:rgba(7,9,15,.5);padding:6rem 5vw;border-top:1px solid rgba(201,168,76,.06)}
+.phases-inner{max-width:1000px;margin:0 auto}
+.phase-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3rem}
+.phase-card{padding:2rem;position:relative;overflow:hidden}
+.phase-card.p1{background:rgba(52,152,219,.06);border:1px solid rgba(52,152,219,.15)}
+.phase-card.p2{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15)}
+.phase-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.phase-card.p1::before{background:var(--blue)}
+.phase-card.p2::before{background:var(--gold)}
+.phase-num{font-family:'Cormorant Garamond',serif;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.4rem}
+.phase-card.p1 .phase-num{color:var(--blue)}
+.phase-card.p2 .phase-num{color:var(--gold)}
+.phase-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--white);letter-spacing:.04em;margin-bottom:.3rem}
+.phase-dates{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:1.2rem}
+.phase-days{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:rgba(255,255,255,.08);position:absolute;top:1rem;right:1.5rem;line-height:1}
+.phase-items{display:flex;flex-direction:column;gap:.55rem}
+.phase-item{display:flex;gap:.8rem;align-items:flex-start;font-size:.72rem;line-height:1.6;color:rgba(255,255,255,.45);letter-spacing:.03em}
+.pi-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.phase-card.p1 .pi-dot{background:var(--blue)}
+.phase-card.p2 .pi-dot{background:var(--gold)}
+
+/* THREE GOALS DETAIL */
+.goals-detail{background:var(--navy-dark);padding:6rem 5vw;border-top:1px solid rgba(201,168,76,.06)}
+.goals-detail-inner{max-width:1000px;margin:0 auto}
+.gd-grid{display:flex;flex-direction:column;gap:1.2rem;margin-top:2.5rem}
+.gd-card{padding:2rem 2.5rem;display:flex;gap:2rem;align-items:center;position:relative;overflow:hidden}
+.gd-card.audience{background:rgba(52,152,219,.06);border:1px solid rgba(52,152,219,.12);border-left:3px solid var(--blue)}
+.gd-card.funding{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.12);border-left:3px solid var(--gold)}
+.gd-card.revenue{background:rgba(39,174,96,.05);border:1px solid rgba(39,174,96,.12);border-left:3px solid var(--green)}
+.gd-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1;flex-shrink:0;width:160px}
+.gd-card.audience .gd-num{color:var(--blue)}
+.gd-card.funding .gd-num{color:var(--gold-light)}
+.gd-card.revenue .gd-num{color:var(--green)}
+.gd-label{font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;margin-bottom:.4rem;display:block}
+.gd-card.audience .gd-label{color:var(--blue)}
+.gd-card.funding .gd-label{color:var(--gold)}
+.gd-card.revenue .gd-label{color:var(--green)}
+.gd-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.3rem}
+.gd-desc{font-size:.74rem;line-height:1.75;color:rgba(255,255,255,.38);letter-spacing:.03em}
+.gd-what{font-size:.68rem;color:rgba(255,255,255,.2);letter-spacing:.04em;margin-top:.5rem;font-style:italic}
+
+/* JAPANESE */
+.japanese{background:rgba(7,9,15,.6);padding:6rem 5vw;border-top:1px solid rgba(201,168,76,.06)}
+.jp-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.jp-levels{display:flex;flex-direction:column;gap:.8rem}
+.jp-level{display:flex;gap:1.2rem;align-items:flex-start;padding:.8rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.jp-badge{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;padding:.28rem .65rem;border:1px solid;flex-shrink:0}
+.jp-badge.n5{border-color:rgba(39,174,96,.3);color:var(--green)}
+.jp-badge.n4{border-color:rgba(52,152,219,.3);color:var(--blue)}
+.jp-badge.n3{border-color:var(--gold);color:var(--gold-light)}
+.jp-badge.n2{border-color:rgba(231,76,60,.3);color:rgba(231,76,60,.7)}
+.jp-level-title{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:400;color:var(--white);margin-bottom:.2rem}
+.jp-level-desc{font-size:.68rem;color:rgba(255,255,255,.35);line-height:1.6;letter-spacing:.03em}
+.jp-big{font-family:'Cormorant Garamond',serif;font-size:10rem;font-weight:300;color:rgba(93,173,226,.12);line-height:1;text-align:center;animation:floatY 6s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+/* MANIFESTO */
+.manifesto{background:var(--black);padding:9rem 5vw;text-align:center;position:relative;overflow:hidden}
+.mf-glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 50% 50%,rgba(22,48,83,.5) 0%,transparent 65%)}
+.mf-giant{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',serif;font-size:22vw;font-weight:300;color:rgba(201,168,76,.025);white-space:nowrap;pointer-events:none;letter-spacing:.05em}
+.mf-inner{position:relative;z-index:2;max-width:700px;margin:0 auto}
+.mf-q{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:300;font-style:italic;line-height:1.5;letter-spacing:.04em;color:var(--white);margin-bottom:2rem}
+.mf-q em{color:var(--gold-light);font-style:normal}
+.mf-attr{font-size:.55rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+
+/* FOOTER */
+footer{background:var(--navy-dark);border-top:1px solid rgba(201,168,76,.1);padding:3rem 5vw;display:flex;align-items:center;justify-content:space-between}
+.f-left{display:flex;flex-direction:column;gap:.4rem}
+.f-brand{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.28em;color:var(--white)}
+.f-brand span{color:var(--gold)}
+.f-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.78rem;color:rgba(201,168,76,.35)}
+.f-logo{width:36px;height:36px;object-fit:contain;mix-blend-mode:screen;opacity:.6}
+.f-copy{font-size:.52rem;letter-spacing:.15em;color:rgba(255,255,255,.2)}
+
+/* REVEAL */
+.rev{opacity:0;transform:translateY(28px);transition:opacity .95s cubic-bezier(.25,.46,.45,.94),transform .95s cubic-bezier(.25,.46,.45,.94)}
+.rev.on{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}
+.rev-l{opacity:0;transform:translateX(-28px);transition:opacity 1s cubic-bezier(.25,.46,.45,.94),transform 1s cubic-bezier(.25,.46,.45,.94)}
+.rev-l.on{opacity:1;transform:translateX(0)}
+.rev-r{opacity:0;transform:translateX(28px);transition:opacity 1s cubic-bezier(.25,.46,.45,.94),transform 1s cubic-bezier(.25,.46,.45,.94)}
+.rev-r.on{opacity:1;transform:translateX(0)}
+@media(max-width:768px){.goals-row,.phase-grid,.jp-inner{grid-template-columns:1fr}.nav-links,.nav-date{display:none}.cd-num{font-size:2.8rem;min-width:72px}.gd-card{flex-direction:column}.gd-num{width:auto}}
+</style>
+</head><body>
+<div id="cur"></div><div id="cur-ring"></div>
+<nav>
+  <div class="nav-left">
+    <img class="nav-logo" src="data:image/jpeg;base64,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" alt="Vunagi&co">
+    <span class="nav-brand">The <span>250</span></span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#countdown">Countdown</a></li>
+    <li><a href="#milestones">Milestones</a></li>
+    <li><a href="#goals">Goals</a></li>
+    <li><a href="#skills">Skills</a></li><li><a href="#japanese">Japanese</a></li>
+  </ul>
+  <span class="nav-date" id="nav-date"></span>
+</nav>
+<section class="hero" id="countdown">
+  <div class="hero-grid"></div><div class="hero-glow"></div>
+  <div class="hero-content">
+  <p class="hero-eyebrow">Vunagi&amp;co Founding Period &nbsp;·&nbsp; Japan / UK &nbsp;·&nbsp; Full Commitment</p>
+  <h1 class="hero-h1">The <em id="days-hero">250</em></h1>
+  <p class="hero-sub">Days to December 31st 2026 &nbsp;·&nbsp; The Launch Decision &nbsp;·&nbsp; Vunagi&amp;co 2027</p>
+  <div class="cd-wrap">
+    <div class="cd-unit"><div class="cd-num" id="cd-d">250</div><div class="cd-lbl">Days</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Minutes</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Seconds</div></div>
+  </div>
+  <p class="target-lbl">Decision Point &nbsp;·&nbsp; <em>31 December 2026</em> &nbsp;·&nbsp; Vunagi&amp;co 2027 Launch</p>
+  <div class="goals-row">
+    <div class="goal-card audience"><span class="goal-tag">証明 &nbsp;·&nbsp; Audience</span><div class="goal-val">500</div><div class="goal-desc">Waitlist signups. Proof that a real audience exists before a single pound of investment is asked for.</div></div>
+    <div class="goal-card funding"><span class="goal-tag">資金 &nbsp;·&nbsp; Funding</span><div class="goal-val">¥30M</div><div class="goal-desc">Fully funded startup. Six months of active investor conversations beginning July 1st 2026.</div></div>
+    <div class="goal-card revenue"><span class="goal-tag">収入 &nbsp;·&nbsp; Revenue</span><div class="goal-val">£1,000</div><div class="goal-desc">First real revenue. Proof the commercial model works. Approximately 10 box sales. Zero to one is everything.</div></div>
+  </div>
+  </div>
+</section>
+<section class="milestones" id="milestones"><div class="ms-inner">
+<div class="rev">
+  <p class="sec-tag">The Journey</p>
+  <h2 class="sec-title">Four milestones. <em>One direction.</em></h2>
+  <p class="sec-sub">Every milestone is a gate. Pass through it and the next one opens. Miss it and you adjust — but you do not stop.</p>
+</div>
+<div class="timeline">
+<div class="tl-item">
+  <div class="tl-dot now"></div>
+  <div class="tl-date">Today</div>
+  <div class="tl-content">
+    <span class="tl-tag urgent">STARTS NOW</span>
+    <div class="tl-title">Today — April 2026</div>
+    <div class="tl-desc">The founding period begins. Pages go live. Reddit campaign launches. First email collected from a stranger. The 250 days are not a countdown to a decision — they are a commitment to a direction.</div>
+  </div>
+  <div class="tl-days"></div>
+</div>
+<div class="tl-item">
+  <div class="tl-dot investor"></div>
+  <div class="tl-date">July 1st</div>
+  <div class="tl-content">
+    <span class="tl-tag urgent">INVESTOR READY</span>
+    <div class="tl-title">July 1st — 67 Days</div>
+    <div class="tl-desc">Masters thesis completed. 500 waitlist target hit. £1,000 revenue proven. Pitch deck finalised. Begin active investor conversations. Six months of funding process starts here.</div>
+  </div>
+  <div class="tl-days">67</div>
+</div>
+<div class="tl-item">
+  <div class="tl-dot thesis"></div>
+  <div class="tl-date">July 2026</div>
+  <div class="tl-content">
+    <span class="tl-tag key">THESIS SUBMITTED</span>
+    <div class="tl-title">July 2026 — ~67 Days</div>
+    <div class="tl-desc">Masters thesis on Thailand 4.0, education for 15–18 year olds, and talent development startups submitted to Sophia University. The academic foundation of the Vunagi Black Foundation is formalised.</div>
+  </div>
+  <div class="tl-days"></div>
+</div>
+<div class="tl-item">
+  <div class="tl-dot jlpt"></div>
+  <div class="tl-date">December 10th</div>
+  <div class="tl-content">
+    <span class="tl-tag language">JLPT N3 EXAM</span>
+    <div class="tl-title">December 10th — 229 Days</div>
+    <div class="tl-desc">The language milestone. N3 passed means Japan is a real operational market — not just a location. Business conversations, supplier relationships and partner negotiations all become possible.</div>
+  </div>
+  <div class="tl-days">229</div>
+</div>
+<div class="tl-item">
+  <div class="tl-dot launch"></div>
+  <div class="tl-date">December 31st</div>
+  <div class="tl-content">
+    <span class="tl-tag life">THE DECISION POINT</span>
+    <div class="tl-title">December 31st — 250 Days</div>
+    <div class="tl-desc">Is Japan working? Is Vunagi&amp;co funded? Is the model proven? December 31st is not a deadline. It is the moment you look at what 250 days of full commitment produced — and you launch 2027 from that position.</div>
+  </div>
+  <div class="tl-days">250</div>
+</div>
+</div></div></section>
+<section class="phases"><div class="phases-inner">
+<div class="rev">
+  <p class="sec-tag">The Architecture</p>
+  <h2 class="sec-title">Two phases. <em>One outcome.</em></h2>
+</div>
+<div class="phase-grid">
+<div class="phase-card p1 rev-l">
+  <div class="phase-days">67</div>
+  <div class="phase-num">Phase One · Now → July 1st</div>
+  <div class="phase-title">Build &amp; Prove</div>
+  <div class="phase-dates">April 25 — July 1 · 67 Days</div>
+  <div class="phase-items">
+    <div class="phase-item"><div class="pi-dot"></div>Get all pages live on GitHub</div>
+    <div class="phase-item"><div class="pi-dot"></div>Reddit campaign — first 500 waitlist signups</div>
+    <div class="phase-item"><div class="pi-dot"></div>Complete masters thesis — submit to Sophia University</div>
+    <div class="phase-item"><div class="pi-dot"></div>Finalise investor pitch deck with real numbers</div>
+    <div class="phase-item"><div class="pi-dot"></div>Google Digital Marketing Certificate — begin</div>
+    <div class="phase-item"><div class="pi-dot"></div>Japanese Ultra Learning N5 sprint — 30 days</div>
+  </div>
+</div>
+<div class="phase-card p2 rev-r">
+  <div class="phase-days">183</div>
+  <div class="phase-num">Phase Two · July 1st → Dec 31st</div>
+  <div class="phase-title">Fund &amp; Launch</div>
+  <div class="phase-dates">July 1 — December 31 · 183 Days</div>
+  <div class="phase-items">
+    <div class="phase-item"><div class="pi-dot"></div>Active investor conversations — 6 month process</div>
+    <div class="phase-item"><div class="pi-dot"></div>Target: ¥30M funding secured</div>
+    <div class="phase-item"><div class="pi-dot"></div>First £1,000 revenue — approximately 10 box sales</div>
+    <div class="phase-item"><div class="pi-dot"></div>Vunagi Black Foundation — formal registration</div>
+    <div class="phase-item"><div class="pi-dot"></div>House of Brands — first partner brand signed</div>
+    <div class="phase-item"><div class="pi-dot"></div>JLPT N3 Exam — December 10th</div>
+    <div class="phase-item"><div class="pi-dot"></div>Google Digital Marketing Certificate — complete</div>
+    <div class="phase-item"><div class="pi-dot"></div>December 31st — Vunagi&amp;co 2027 launch position</div>
+  </div>
+</div>
+</div></div></section>
+<section class="goals-detail" id="goals"><div class="goals-detail-inner">
+<div class="rev">
+  <p class="sec-tag">The Three Targets</p>
+  <h2 class="sec-title">Not aspirations. <em>Commitments.</em></h2>
+  <p class="sec-sub">These three numbers define December 31st. Not one of them is optional. Each one proves a different dimension of the business.</p>
+</div>
+<div class="gd-grid">
+<div class="gd-card audience rev">
+  <div class="gd-num">500</div>
+  <div>
+    <span class="gd-label">証明 · Audience Proof</span>
+    <div class="gd-title">Waitlist Signups</div>
+    <p class="gd-desc">500 real people who gave their email address because they believe in what Vunagi&amp;co is building. No investor takes a brand seriously without an audience. This is the first gate. Reddit is the first move. The story — building in Tokyo, funding education in Thailand, anime as the vehicle — is the asset.</p>
+    <p class="gd-what">What it proves: There is a real market for this. The idea has escaped your head and entered the world.</p>
+  </div>
+</div>
+<div class="gd-card funding rev">
+  <div class="gd-num">¥30M</div>
+  <div>
+    <span class="gd-label">資金 · Investment Proof</span>
+    <div class="gd-title">Fully Funded Startup</div>
+    <p class="gd-desc">Approximately £150,000 / $200,000. Six months of active investor conversations beginning July 1st — the timeline your professor confirmed. Sources: JICA development funding, Japanese startup grants, UK startup investment, angel investors in the anime and culture space, impact investors aligned with the Foundation mission.</p>
+    <p class="gd-what">What it proves: Serious people with serious money believe this is a serious business.</p>
+  </div>
+</div>
+<div class="gd-card revenue rev">
+  <div class="gd-num">£1,000</div>
+  <div>
+    <span class="gd-label">収入 · Commercial Proof</span>
+    <div class="gd-title">First Revenue</div>
+    <p class="gd-desc">Approximately 10 Shogun box sales at $150 each. The smallest number and the most psychologically important. Zero to one is the hardest jump in any business. Once money has changed hands with a stranger — not a friend, not a family member, a stranger — Vunagi&amp;co is no longer a brand. It is a business.</p>
+    <p class="gd-what">What it proves: The commercial model works. People will pay for this.</p>
+  </div>
+</div>
+</div></div></section>
+
+<!-- ENTREPRENEURIAL SKILLS -->
+<section class="goals-detail" id="skills" style="background:rgba(7,9,15,.7);border-top:1px solid rgba(201,168,76,.06)">
+<div class="goals-detail-inner">
+<div class="rev">
+  <p class="sec-tag">The Curriculum</p>
+  <h2 class="sec-title">9 skills every <em>solo founder</em> must build</h2>
+  <p class="sec-sub" style="color:rgba(255,255,255,.35)">Distilled from what actually separates founders who survive from those who don't. Each one applies directly to building Vunagi&co as a solo founder scaling to a team.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,168,76,.06);margin-top:3rem">
+
+<div style="background:var(--navy-dark);padding:2.2rem 1.8rem;position:relative;overflow:hidden">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.06);line-height:1;margin-bottom:.5rem">01</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">Foundation</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Sales &amp; Persuasion</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">Revenue is oxygen. Nothing else matters first. Learn to articulate value clearly, handle objections without crumbling, and close without desperation.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">Japan: Relationship-first. Trust before transaction. The long game.</p>
+</div>
+
+<div style="background:var(--navy-dark);padding:2.2rem 1.8rem">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.06);line-height:1;margin-bottom:.5rem">02</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">Survival</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Financial Literacy</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">More businesses die from cash flow problems than bad ideas. Know your margins, burn rate and break-even. Know where every yen goes before it goes there.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">¥30M funding target. Work backwards from the number. Always.</p>
+</div>
+
+<div style="background:var(--navy-dark);padding:2.2rem 1.8rem">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.06);line-height:1;margin-bottom:.5rem">03</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">Direction</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Strategic Planning</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">A goal without a plan is a wish. Set the destination, map the milestones, build in review points. Know when to pivot versus when to persist.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">Japan: Long-term thinking signals seriousness to investors.</p>
+</div>
+
+<div style="background:var(--navy-dark);padding:2.2rem 1.8rem">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.06);line-height:1;margin-bottom:.5rem">04</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">Visibility</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Marketing &amp; Brand</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">Attention is the first currency. Build an audience before you need one. Tell a story that converts. Create a brand people want to belong to.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">Vunagi&co is already proof. You understand this. Now formalise it.</p>
+</div>
+
+<div style="background:var(--navy-dark);padding:2.2rem 1.8rem">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.06);line-height:1;margin-bottom:.5rem">05</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">Core Strength</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Resilience &amp; Self-Management</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">You are the business. Your standards are its standards. Your avoidance is its bottleneck. Your resilience is its foundation. This is the whole game.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">Already your strongest quality. Protect it. Build on it daily.</p>
+</div>
+
+<div style="background:var(--navy-dark);padding:2.2rem 1.8rem">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.06);line-height:1;margin-bottom:.5rem">06</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">Problem First</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Customer Understanding</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">The product is never the starting point. The customer's problem is. Fall in love with the problem, not the solution. Talk to real people. Understand what keeps them up at night.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">Ages 16-30, anime-native, growth-hungry. You are building for someone you understand.</p>
+</div>
+
+<div style="background:var(--navy-dark);padding:2.2rem 1.8rem">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.06);line-height:1;margin-bottom:.5rem">07</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">The Only Thing</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Execution &amp; Shipping</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">Ideas are worthless. Execution is everything. Ship before you're ready. Learn from real feedback. Iterate in public. The longer you wait to launch, the longer you have nothing.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">Kaizen — continuous improvement after shipping. Release, refine, repeat.</p>
+</div>
+
+<div style="background:var(--navy-dark);padding:2.2rem 1.8rem">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.06);line-height:1;margin-bottom:.5rem">08</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">The Multiplier</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Networking &amp; Relationships</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">Your network is your net worth — especially true at the start with no track record. Build relationships before you need them. Be genuinely useful to people. The compound interest on relationships is extraordinary.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">人脈 (jinmyaku) — personal connections are everything in Japanese business.</p>
+</div>
+
+<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);padding:2.2rem 1.8rem;position:relative">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.15);line-height:1;margin-bottom:.5rem">09</div>
+  <span style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block">Solo → Team</span>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem">Team Building &amp; Leadership</div>
+  <p style="font-size:.74rem;line-height:1.85;color:rgba(255,255,255,.38);letter-spacing:.03em;margin-bottom:.8rem">You are the vision. But you cannot be the operations, the finance, the design, the fulfilment and the foundation simultaneously. A solo founder who cannot attract people around the mission stays solo forever.</p>
+  <p style="font-size:.65rem;color:rgba(201,168,76,.4);letter-spacing:.04em;border-left:2px solid rgba(201,168,76,.2);padding-left:.8rem;font-style:italic">The team Vunagi&co needs: Operations · Marketing · Finance · Japan partner · Thailand partner.</p>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- SOLO FOUNDER TO TEAM -->
+<section style="background:var(--navy-dark);padding:6rem 5vw;border-top:1px solid rgba(201,168,76,.06)">
+<div style="max-width:1000px;margin:0 auto">
+<div class="rev">
+  <p class="sec-tag">The Team</p>
+  <h2 class="sec-title">Solo founder. <em>Team vision.</em></h2>
+  <p class="sec-sub" style="color:rgba(255,255,255,.35);margin-bottom:3rem">You are the sole founder. The brand, the vision, the foundation — they exist because of you. But Vunagi&co at scale requires people who believe in the mission as much as you do. The job now is to find them.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+
+<div style="padding:2rem;background:rgba(22,48,83,.2);border:1px solid rgba(201,168,76,.08);border-top:2px solid var(--gold)">
+  <div style="font-size:1.5rem;margin-bottom:.8rem">⚙️</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem">Operations</div>
+  <p style="font-size:.72rem;line-height:1.75;color:rgba(255,255,255,.35);letter-spacing:.03em">Fulfilment, sourcing from Nakano Broadway, logistics, inventory. The person who makes the product real every month.</p>
+</div>
+
+<div style="padding:2rem;background:rgba(22,48,83,.2);border:1px solid rgba(201,168,76,.08);border-top:2px solid var(--blue)">
+  <div style="font-size:1.5rem;margin-bottom:.8rem">📣</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem">Marketing</div>
+  <p style="font-size:.72rem;line-height:1.75;color:rgba(255,255,255,.35);letter-spacing:.03em">Social, campaigns, community building. The person who grows the audience beyond the first 500.</p>
+</div>
+
+<div style="padding:2rem;background:rgba(22,48,83,.2);border:1px solid rgba(201,168,76,.08);border-top:2px solid var(--green)">
+  <div style="font-size:1.5rem;margin-bottom:.8rem">📊</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem">Finance</div>
+  <p style="font-size:.72rem;line-height:1.75;color:rgba(255,255,255,.35);letter-spacing:.03em">Investor relations, accounting, grant applications. The person who manages the ¥30M once it arrives.</p>
+</div>
+
+<div style="padding:2rem;background:rgba(22,48,83,.2);border:1px solid rgba(201,168,76,.08);border-top:2px solid var(--navy-mid)">
+  <div style="font-size:1.5rem;margin-bottom:.8rem">🇯🇵</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem">Japan Partner</div>
+  <p style="font-size:.72rem;line-height:1.75;color:rgba(255,255,255,.35);letter-spacing:.03em">Local relationships, Japanese market navigation, supplier networks. The person who makes Tokyo work at scale.</p>
+</div>
+
+<div style="padding:2rem;background:rgba(22,48,83,.2);border:1px solid rgba(201,168,76,.08);border-top:2px solid var(--red)">
+  <div style="font-size:1.5rem;margin-bottom:.8rem">🇹🇭</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem">Thailand Partner</div>
+  <p style="font-size:.72rem;line-height:1.75;color:rgba(255,255,255,.35);letter-spacing:.03em">Foundation on-the-ground. School relationships, community trust, project implementation. The person who makes the mission real in Thailand.</p>
+</div>
+
+<div style="padding:2rem;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-top:2px solid var(--gold);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:rgba(201,168,76,.3);margin-bottom:.6rem">+</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.4rem">You</div>
+  <p style="font-size:.72rem;line-height:1.75;color:rgba(255,255,255,.35);letter-spacing:.03em">Vision · Brand · Strategy · Foundation. The reason all of the above have something worth working on.</p>
+</div>
+
+</div>
+</div>
+</section>
+<section class="japanese" id="japanese"><div style="max-width:1000px;margin:0 auto">
+<div class="jp-inner">
+<div class="rev-l">
+  <p class="sec-tag">日本語 · The Language</p>
+  <h2 class="sec-title">N3 by December 10th.<br><em>N2 in conversation.</em></h2>
+  <p class="sec-sub" style="color:rgba(255,255,255,.35);margin-bottom:2rem">Japanese is not just a language skill. It is the key that unlocks Japan as a market, as a life, and as an identity. 250 days. 2-3 hours daily. Ultra Learning principles applied ruthlessly.</p>
+  <div class="jp-levels">
+    <div class="jp-level"><div class="jp-badge n5">N5</div><div><div class="jp-level-title">Basic — Target: Month 1</div><div class="jp-level-desc">Survival Japanese. 103 kanji, ~800 vocabulary. The 30-day Ultra Learning sprint begins now.</div></div></div>
+    <div class="jp-level"><div class="jp-badge n4">N4</div><div><div class="jp-level-title">Elementary — Target: Month 3</div><div class="jp-level-desc">Daily life Japanese. ~300 kanji, ~1,500 vocabulary. Navigate Japan independently.</div></div></div>
+    <div class="jp-level"><div class="jp-badge n3">N3 ← Exam</div><div><div class="jp-level-title">Intermediate — 10 December 2026</div><div class="jp-level-desc">~650 kanji, ~3,750 vocabulary. Business contexts. The JLPT N3 examination target.</div></div></div>
+    <div class="jp-level"><div class="jp-badge n2">N2</div><div><div class="jp-level-title">Upper — Speaking Target</div><div class="jp-level-desc">Conversational fluency. Business Japanese. Where you aim to speak by December — even if the exam is N3.</div></div></div>
+  </div>
+</div>
+<div class="jp-big rev-r">語</div>
+</div></div></section>
+<section class="manifesto rev">
+  <div class="mf-glow"></div>
+  <div class="mf-giant">250</div>
+  <div class="mf-inner">
+  <p class="mf-q">"250 days is not a countdown.<br>It is a <em>commitment</em> —<br>to the business, to the language,<br>to the life you have chosen<br>with full understanding of the risk."</p>
+  <p class="mf-attr">The 250 &nbsp;·&nbsp; Vunagi&amp;co Founding Period &nbsp;·&nbsp; 2026 → 2027</p>
+  </div>
+</section>
+<footer>
+  <div class="f-left">
+    <div class="f-brand">Vunagi<span>&amp;co</span></div>
+    <div class="f-tag">The 250 — Founding Period Dashboard</div>
+  </div>
+  <img class="f-logo" src="data:image/jpeg;base64,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" alt="Vunagi">
+  <span class="f-copy">© 2026 Vunagi&amp;co. All rights reserved.</span>
+</footer>
+<script>
+const target231 = new Date('2026-12-31T23:59:59').getTime();
+const jlpt = new Date('2026-12-10T00:00:00').getTime();
+function updateCountdown(){
+  const now = new Date().getTime();
+  const diff = target231 - now;
+  if(diff<=0) return;
+  const days = Math.floor(diff/(1000*60*60*24));
+  const hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const mins = Math.floor((diff%(1000*60*60))/(1000*60));
+  const secs = Math.floor((diff%(1000*60))/1000);
+  document.getElementById('cd-d').textContent = days;
+  document.getElementById('cd-h').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(mins).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(secs).padStart(2,'0');
+  document.getElementById('days-hero').textContent = days;
+}
+updateCountdown();
+setInterval(updateCountdown,1000);
+
+const now = new Date();
+document.getElementById('nav-date').textContent = now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a)})();
+document.querySelectorAll('button,a').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='42px';ring.style.height='42px';ring.style.borderColor='rgba(201,168,76,.9)'});
+  el.addEventListener('mouseleave',()=>{ring.style.width='28px';ring.style.height='28px';ring.style.borderColor='rgba(201,168,76,.5)'});
+});
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.08});
+document.querySelectorAll('.rev,.rev-l,.rev-r').forEach(el=>obs.observe(el));
+</script>
+</body></html>
